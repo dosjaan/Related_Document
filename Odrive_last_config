@@ -1,0 +1,64 @@
+odrv0.config.brake_resistance = 2.0
+odrv0.config.dc_bus_undervoltage_trip_level = 3.6
+odrv0.config.dc_bus_overvoltage_trip_level = 56.0
+odrv0.config.dc_max_positive_current = 50.0  # Reduced from 40A
+odrv0.config.dc_max_negative_current = -50.0  # Reduced for smoother br
+odrv0.config.max_regen_current = 50.0  # Matched with negative current 
+
+odrv0.axis0.motor.config.current_lim = 50.0
+odrv0.axis0.motor.config.requested_current_range = 70.0
+odrv0.axis0.motor.config.calibration_current = 20.0
+odrv0.axis0.motor.config.pole_pairs = 7
+odrv0.axis0.motor.config.motor_type = MOTOR_TYPE_HIGH_CURRENT
+odrv0.axis0.motor.config.current_control_bandwidth = 2000
+
+
+odrv0.axis0.encoder.config.cpr = 8192
+odrv0.axis0.encoder.config.bandwidth = 2000  # Reduced for stability
+odrv0.axis0.encoder.config.use_index = False
+
+odrv0.axis0.controller.config.control_mode = CONTROL_MODE_VELOCITY_CONTROL
+odrv0.axis0.controller.config.vel_limit = 100  # Reduced max velocity
+odrv0.axis0.controller.config.vel_gain = 0.08
+odrv0.axis0.controller.config.vel_integrator_gain = 0.1
+odrv0.axis0.trap_traj.config.accel_limit = 30.0  # Much lower acceleration
+odrv0.axis0.trap_traj.config.decel_limit = 30.0
+
+odrv0.axis1.motor.config.current_lim = 50.0
+odrv0.axis1.motor.config.requested_current_range = 70.0
+odrv0.axis1.motor.config.calibration_current = 20.0
+odrv0.axis1.motor.config.pole_pairs = 7
+odrv0.axis1.motor.config.motor_type = MOTOR_TYPE_HIGH_CURRENT
+odrv0.axis1.motor.config.current_control_bandwidth = 2000
+
+odrv0.axis1.encoder.config.cpr = 8192
+odrv0.axis1.encoder.config.bandwidth = 2000  # Reduced for stability
+odrv0.axis1.encoder.config.use_index = False
+
+odrv0.axis1.controller.config.control_mode = CONTROL_MODE_VELOCITY_CONTROL
+odrv0.axis1.controller.config.vel_limit = 100  # Reduced max velocity
+odrv0.axis1.controller.config.vel_gain = 0.08
+odrv0.axis1.controller.config.vel_integrator_gain = 0.1
+odrv0.axis1.trap_traj.config.accel_limit = 30.0  # Much lower acceleration
+odrv0.axis1.trap_traj.config.decel_limit = 30.0
+
+odrv0.axis0.requested_state = AXIS_STATE_MOTOR_CALIBRATION  
+odrv0.axis0.config.startup_encoder_offset_calibration = True  
+odrv0.axis0.requested_state = AXIS_STATE_CLOSED_LOOP_CONTROL
+odrv0.axis0.config.startup_closed_loop_control = True
+
+odrv0.axis0.requested_state = AXIS_STATE_MOTOR_CALIBRATION  		
+odrv0.axis0.motor.config.pre_calibrated = True				
+odrv0.axis0.requested_state = AXIS_STATE_ENCODER_OFFSET_CALIBRATION 	
+odrv0.axis0.config.startup_encoder_offset_calibration = True   			
+odrv0.axis0.requested_state = AXIS_STATE_CLOSED_LOOP_CONTROL		
+odrv0.axis0.config.startup_closed_loop_control = True	
+
+odrv0.axis1.requested_state = AXIS_STATE_MOTOR_CALIBRATION
+odrv0.axis1.motor.config.pre_calibrated = True
+odrv0.axis1.requested_state = AXIS_STATE_ENCODER_OFFSET_CALIBRATION
+odrv0.axis1.config.startup_encoder_offset_calibration = True
+odrv0.axis1.config.startup_closed_loop_control = True
+odrv0.save_configuration()
+odrv0.reboot()
+
