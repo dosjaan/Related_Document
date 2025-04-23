@@ -204,3 +204,114 @@
 	}
 	/* USER CODE END Dunk_task */
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		if(Robot_Status==Dunk)
+		{
+			if(dunk_init_flag==1 && Allowed_Flag==1)
+			{
+				if(jump_state==1)
+				{
+					Unitree_Set_Parametr(&Sunagch_Send, 1, -4.5, 0, -30, 5, 0.01);
+					SERVO_Send_recv(&Sunagch_Send, &Sunagch_Recv);
+					jump_state=2;
+				}
+				if(SUNAGCH_AMT102_POS<-20 && jump_state==2)
+				{
+					//					Unitree_Set_Parametr(&Right_Leg_Send, 1, 0.5, 0, M1_init, 14, 0.01);
+					//					Unitree_Set_Parametr(&Left_Leg_Send, 1, -0.5, 0, M2_Init, 14, 0.01);
+					//					SERVO_Send_recv(&Left_Leg_Send, &Left_Leg_Recv);
+					//					osDelay(5);
+					//					SERVO_Send_recv(&Right_Leg_Send, &Right_Leg_Recv);
+					//					osDelay(30);
+					Unitree_Set_Parametr(&Right_Leg_Send, 1, 3, 0, M1_init + 17, 18, 0.01);
+					Unitree_Set_Parametr(&Left_Leg_Send, 1, -3, 0, M2_Init - 17, 18, 0.01);
+					SERVO_Send_recv(&Left_Leg_Send, &Left_Leg_Recv);
+					osDelay(5);
+					SERVO_Send_recv(&Right_Leg_Send, &Right_Leg_Recv);
+					osDelay(5);
+					osDelay(130);
+					Unitree_Set_Parametr(&Sunagch_Send, 1, -4, 0, -81, 5, 0.01);
+					SERVO_Send_recv(&Sunagch_Send, &Sunagch_Recv);
+					osDelay(125);
+					Unitree_Set_Parametr(&Right_Leg_Send, 1, -0.5, 0, M1_init + 3, 7, 0.02);
+					Unitree_Set_Parametr(&Left_Leg_Send, 1, 0.5, 0, M2_Init - 3, 7, 0.02);
+					SERVO_Send_recv(&Right_Leg_Send, &Right_Leg_Recv);
+					osDelay(5);
+					SERVO_Send_recv(&Left_Leg_Send, &Left_Leg_Recv);
+					jump_state=3;
+				}
+				if(jump_state==3)
+				{
+					if(SUNAGCH_AMT102_POS<-50)
+					{
+						HAL_GPIO_WritePin(BALL_HYDRAULIC_GPIO_Port,BALL_HYDRAULIC_Pin,1);
+						osDelay(80);
+						jump_state=4;
+					}
+				}
+				if(jump_state==4)
+				{
+					if(SUNAGCH_AMT102_POS<-80)
+					{
+						osDelay(100);
+						Unitree_Set_Parametr(&Sunagch_Send, 1, 0.5, 0,-65, 2, 0.06	);
+						SERVO_Send_recv(&Sunagch_Send, &Sunagch_Recv);
+						osDelay(2000);
+						jump_flag = 0;
+						Robot_Status=0;
+						dunk_init_flag=Allowed_Flag=0;
+						osDelay(50);
+						HAL_GPIO_WritePin(BALL_HYDRAULIC_GPIO_Port,BALL_HYDRAULIC_Pin,0);
+						Unitree_Set_Parametr(&Right_Leg_Send, 1, 0, 0, M1_init, 2 , 0.08);
+						Unitree_Set_Parametr(&Left_Leg_Send, 1, 0, 0, M2_Init, 2, 0.08);
+						SERVO_Send_recv(&Right_Leg_Send, &Right_Leg_Recv);
+						vTaskDelay(20);
+						SERVO_Send_recv(&Left_Leg_Send, &Left_Leg_Recv);
+						jump_state=0;
+						vTaskSuspend(NULL);
+					}
+				}
+
+			}
+			else if(dunk_init_flag==0)
+			{
+				jump_state = 1;
+				HAL_GPIO_WritePin(BALL_HYDRAULIC_GPIO_Port,BALL_HYDRAULIC_Pin,0);
+				Unitree_Set_Parametr(&Sunagch_Send, 1, 0, 0,-10, 0.2, 0.02);
+				SERVO_Send_recv(&Sunagch_Send, &Sunagch_Recv);
+				Unitree_Set_Parametr(&Elbow_Send, 1, -1, 0,Elbow_old.Pos, 0.4, 0.1);
+				move_elbow_smoothly(Elbow_old.Pos,ELBOW_DUNK_POS);
+				arm_angle_pid.SP=15;
+				dunk_init_flag=task_init_flag=1;
+				jump_start_time = osKernelGetTickCount();
+			}
+		}
+		else
+		{
+			dunk_init_flag=task_init_flag=0;
+			vTaskSuspend(NULL);
+		}
+		osDelay(10);
+	}
+	/* USER CODE END Dunk_task */
+}
